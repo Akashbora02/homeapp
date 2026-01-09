@@ -3,7 +3,7 @@ services:
     build: .
     container_name: homeapp-frontend
     ports:
-      - "3002:3002"
+      - "3002:80"
     restart: always
 
   grocery-backend:

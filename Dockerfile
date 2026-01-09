@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
@@ -6,11 +6,10 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-
 RUN npm run build
 
-RUN npm install -g pm2
+FROM nginx:alpine
+COPY --from=build /app/src /usr/share/nginx/html
 
-EXPOSE 3002
-
-CMD ["pm2-runtime", "serve", "build", "3002", "--name", "homeapp-frontend", "--spa"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
