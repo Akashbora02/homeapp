@@ -16,13 +16,15 @@ pipeline {
             }
         }
 
-        stage('Checkout All Repos') {
+        stage('Checkout All Repositories') {
             parallel {
 
                 stage('HomeApp') {
                     steps {
-                        git branch: 'main',
-                            url: 'https://github.com/Akashbora02/homeapp.git'
+                        dir('homeapp') {
+                            git branch: 'main',
+                                url: 'https://github.com/Akashbora02/homeapp.git'
+                        }
                     }
                 }
 
@@ -64,7 +66,7 @@ pipeline {
             }
         }
 
-        stage('Build & Deploy via Docker Compose') {
+        stage('Build & Deploy (Docker Compose)') {
             steps {
                 sh '''
                   docker compose down
@@ -77,8 +79,9 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh '''
-                  curl -f http://localhost:3001
                   curl -f http://localhost:3002
+                  curl -f http://localhost:3001
+                  curl -f http://localhost:3003
                 '''
             }
         }
@@ -86,10 +89,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Fully Automated Dockerized Deployment Successful"
+            echo "✅ All applications including HomeApp are running successfully"
         }
         failure {
-            echo "❌ Deployment Failed"
+            echo "❌ Deployment failed"
         }
     }
 }

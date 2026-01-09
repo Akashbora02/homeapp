@@ -2,6 +2,13 @@ version: "3.9"
 
 services:
 
+  homeapp:
+    build: .
+    container_name: homeapp-frontend
+    ports:
+      - "3002:3002"
+    restart: always
+
   grocery-backend:
     build: ./GroceryAppBe
     ports:
@@ -25,7 +32,7 @@ services:
   todos-frontend:
     build: ./TodosFe
     ports:
-      - "3002:80"
+      - "3003:80"
     depends_on:
       - todos-backend
     restart: always
