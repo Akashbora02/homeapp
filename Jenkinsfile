@@ -15,7 +15,6 @@ pipeline {
                 cleanWs()
             }
         }
-
         stage('Checkout Code') {
             steps {
                 echo "Checking out HomeApp mono-repo..."
