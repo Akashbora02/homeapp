@@ -11,4 +11,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["pm2-runtime", "serve", "build/", "3000", "--name", "grocery-frontend", "--spa"]
+CMD ["pm2-runtime", "serve", "--name", "grocery-frontend", "--", "-s", "build", "-l", "3000"]
+

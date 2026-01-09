@@ -11,4 +11,5 @@ RUN npm run build
 
 EXPOSE 3001
 
-CMD ["pm2-runtime", "serve", "build/", "3001", "--name", "todos-frontend", "--spa"]
+CMD ["pm2-runtime", "serve", "--name", "todos-frontend", "--", "-s", "build", "-l", "3001"]
+
