@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   homeapp:
-    build: .
+    build: ./homeapp
     container_name: homeapp-frontend
     ports:
       - "3002:3002"
