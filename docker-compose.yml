@@ -9,12 +9,13 @@ services:
     restart: unless-stopped
 
   grocery-frontend:
-    build: ./GroceryAppFe
-    container_name: grocery-frontend
-    env_file:
-      - ./GroceryAppFe/.env
+    build:
+      context: ./GroceryAppFe
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    env_file:
+      - ./GroceryAppFe/.env
     depends_on:
       - grocery-backend
     restart: unless-stopped
@@ -28,22 +29,24 @@ services:
     restart: unless-stopped
 
   todos-frontend:
-    build: ./TodosFe
-    container_name: todos-frontend
-    env_file:
-      - ./TodosFe/.env
+    build:
+      context: ./TodosFe
+      dockerfile: Dockerfile
     ports:
       - "3001:3000"
+    env_file:
+      - ./TodosFe/.env
     depends_on:
       - todos-backend
     restart: unless-stopped
   homeapp-frontend:
-    build: .
-    container_name: homeapp-frontend
-    env_file:
-      - .env
+    build:
+      context: ./TodosFe
+      dockerfile: Dockerfile
     ports:
       - "3002:3000"
+    env_file:
+      - .env
     depends_on:
       - todos-backend
     restart: unless-stopped
