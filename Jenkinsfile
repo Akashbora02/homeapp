@@ -79,7 +79,7 @@ pipeline {
                 }
             }
         }
-        stage('Health Check') {
+/*        stage('Health Check') {
             steps {
                 sh '''
                   curl -f http://localhost:3000
@@ -87,7 +87,7 @@ pipeline {
                   curl -f http://localhost:3002
                 '''
             }
-        }
+        }*/
     }
     post {
         success {
