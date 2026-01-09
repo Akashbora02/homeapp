@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 3002
 
-CMD ["pm2-runtime", "serve", "build", "3000", "--name", "frontend-app" "--spa"]
+CMD ["pm2-runtime", "serve", "build", "3002", "--name", "frontend-app" "--spa"]
