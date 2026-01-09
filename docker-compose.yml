@@ -18,7 +18,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - grocery-backend
     restart: unless-stopped
   todos-backend:
     build: ./TodosBe
