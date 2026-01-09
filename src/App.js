@@ -22,14 +22,6 @@ export default function App() {
         >
           Todos App
         </a>
-        <a
-          href={process.env.REACT_APP_ORDERS_URL}
-          className="service-box orders"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Orders App
-        </a>
       </div>
     </div>
   );
