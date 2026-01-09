@@ -7,7 +7,6 @@ RUN npm install
 RUN npm install -g pm2
 
 COPY . .
-
 RUN npm run build
 
 EXPOSE 3000
