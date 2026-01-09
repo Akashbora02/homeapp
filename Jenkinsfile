@@ -3,11 +3,6 @@ pipeline {
         label 'homeapp'
     }
 
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
     stages {
 
         stage('Clean Workspace') {
@@ -30,7 +25,7 @@ pipeline {
                 pwd
                 echo "Listing files:"
                 ls -l
-                
+
                 docker compose down -v
                 docker system prune -af
                 docker builder prune -af
