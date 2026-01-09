@@ -1,5 +1,4 @@
 services:
-
   homeapp:
     build: .
     container_name: homeapp-frontend
