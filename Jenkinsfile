@@ -89,7 +89,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             echo "✅ All applications including HomeApp are running successfully"
