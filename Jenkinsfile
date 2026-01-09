@@ -26,7 +26,6 @@ pipeline {
 
         stage('Build & Deploy (Docker Compose)') {
             steps {
-                dir('homeapp'){
                 sh '''
                 echo "Current directory:"
                 pwd
@@ -42,7 +41,6 @@ pipeline {
                 echo "Starting containers..."
                 docker compose up -d
                 '''
-                }
             }
         }
 
