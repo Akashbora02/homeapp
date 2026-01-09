@@ -69,9 +69,11 @@ pipeline {
         stage('Build & Deploy (Docker Compose)') {
             steps {
                 sh '''
-                  docker compose down
-                  docker compose build
-                  docker compose up -d
+                pwd
+                ls -l
+                docker compose -f docker-compose.yml down
+                docker compose -f docker-compose.yml build
+                docker compose -f docker-compose.yml up -d
                 '''
             }
         }
