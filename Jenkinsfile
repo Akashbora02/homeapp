@@ -30,8 +30,10 @@ pipeline {
                 pwd
                 echo "Listing files:"
                 ls -l
+                
                 docker compose down -v
                 docker system prune -af
+                docker builder prune -af
                 docker compose build --no-cache
                 docker compose up -d
 

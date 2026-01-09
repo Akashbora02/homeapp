@@ -8,6 +8,15 @@ services:
       - "5000:5000"
     restart: unless-stopped
 
+  todos-backend:
+    build: ./TodosBe
+    container_name: todos-backend
+    env_file:
+      - ./TodosBe/.env
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
+
   grocery-frontend:
     build:
       context: ./GroceryAppFe
@@ -16,16 +25,6 @@ services:
       - "3000:3000"
     env_file:
       - ./GroceryAppFe/.env
-    depends_on:
-      - grocery-backend
-    restart: unless-stopped
-  todos-backend:
-    build: ./TodosBe
-    container_name: todos-backend
-    env_file:
-      - ./TodosBe/.env
-    ports:
-      - "5001:5000"
     restart: unless-stopped
 
   todos-frontend:
@@ -36,17 +35,12 @@ services:
       - "3001:3001"
     env_file:
       - ./TodosFe/.env
-    depends_on:
-      - todos-backend
     restart: unless-stopped
+
   homeapp-frontend:
     build:
-      context: ./TodosFe
+      context: .
       dockerfile: Dockerfile
     ports:
       - "3002:3002"
-    env_file:
-      - .env
-    depends_on:
-      - todos-backend
     restart: unless-stopped
