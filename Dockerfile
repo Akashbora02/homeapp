@@ -11,4 +11,4 @@ RUN npm run build
 
 EXPOSE 3002
 
-CMD ["pm2-runtime", "serve", "build", "3002", "--name", "homeapp-frontend", "--spa"]
+CMD ["pm2-runtime", "serve", "build/", "3002", "--name", "homeapp-frontend", "--spa"]
