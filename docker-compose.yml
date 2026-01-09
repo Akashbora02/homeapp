@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+
+  grocery-backend:
+    build: ./GroceryAppBe
+    ports:
+      - "5001:5000"
+    restart: always
+
+  grocery-frontend:
+    build: ./GroceryAppFe
+    ports:
+      - "3001:80"
+    depends_on:
+      - grocery-backend
+    restart: always
+
+  todos-backend:
+    build: ./TodosBe
+    ports:
+      - "5002:5000"
+    restart: always
+
+  todos-frontend:
+    build: ./TodosFe
+    ports:
+      - "3002:80"
+    depends_on:
+      - todos-backend
+    restart: always

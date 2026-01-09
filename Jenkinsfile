@@ -3,24 +3,34 @@ pipeline {
         label 'homeapp'
     }
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
     stages {
-        stage('Checkout HomeApp') {
+
+        stage('Clean Workspace') {
             steps {
-                git branch: 'main', url: 'https://github.com/Akashbora02/homeapp.git'
+                cleanWs()
             }
         }
 
-        stage('Build and Deploy') {
+        stage('Checkout All Repos') {
             parallel {
+
+                stage('HomeApp') {
+                    steps {
+                        git branch: 'main',
+                            url: 'https://github.com/Akashbora02/homeapp.git'
+                    }
+                }
 
                 stage('GroceryAppBe') {
                     steps {
                         dir('GroceryAppBe') {
-                            git branch: 'main', url: 'https://github.com/Akashbora02/GroceryAppBe.git'
-                            sh '''
-                                chmod +x npm_backend.sh
-                                ./npm_backend.sh
-                            '''
+                            git branch: 'main',
+                                url: 'https://github.com/Akashbora02/GroceryAppBe.git'
                         }
                     }
                 }
@@ -28,11 +38,8 @@ pipeline {
                 stage('GroceryAppFe') {
                     steps {
                         dir('GroceryAppFe') {
-                            git branch: 'main', url: 'https://github.com/Akashbora02/GroceryAppFe.git'
-                            sh '''
-                                chmod +x npm_frontend.sh
-                                ./npm_frontend.sh
-                            '''
+                            git branch: 'main',
+                                url: 'https://github.com/Akashbora02/GroceryAppFe.git'
                         }
                     }
                 }
@@ -40,11 +47,8 @@ pipeline {
                 stage('TodosBe') {
                     steps {
                         dir('TodosBe') {
-                            git branch: 'main', url: 'https://github.com/Akashbora02/TodosBe.git'
-                            sh '''
-                                chmod +x npm_backend.sh
-                                ./npm_backend.sh
-                            '''
+                            git branch: 'main',
+                                url: 'https://github.com/Akashbora02/TodosBe.git'
                         }
                     }
                 }
@@ -52,15 +56,40 @@ pipeline {
                 stage('TodosFe') {
                     steps {
                         dir('TodosFe') {
-                            git branch: 'main', url: 'https://github.com/Akashbora02/TodosFe.git'
-                            sh '''
-                                chmod +x npm_frontend.sh
-                                ./npm_frontend.sh
-                            '''
+                            git branch: 'main',
+                                url: 'https://github.com/Akashbora02/TodosFe.git'
                         }
                     }
                 }
             }
+        }
+
+        stage('Build & Deploy via Docker Compose') {
+            steps {
+                sh '''
+                  docker compose down
+                  docker compose build
+                  docker compose up -d
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                  curl -f http://localhost:3001
+                  curl -f http://localhost:3002
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Fully Automated Dockerized Deployment Successful"
+        }
+        failure {
+            echo "❌ Deployment Failed"
         }
     }
 }
