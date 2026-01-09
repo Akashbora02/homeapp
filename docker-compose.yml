@@ -6,8 +6,6 @@ services:
       - ./GroceryAppBe/.env
     ports:
       - "5000:5000"
-    depends_on:
-      - mongo
     restart: unless-stopped
 
   grocery-frontend:
@@ -27,8 +25,6 @@ services:
       - ./TodosBe/.env
     ports:
       - "5001:5000"
-    depends_on:
-      - mongo
     restart: unless-stopped
 
   todos-frontend:
@@ -54,15 +50,3 @@ services:
       - todos-backend
     restart: unless-stopped
     command: ["pm2-runtime", "serve", "build/", "3002", "--name", "homeapp-frontend", "--spa"]
-
-  mongo:
-    image: mongo:6
-    container_name: grocery-mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    restart: unless-stopped
-
-volumes:
-  mongo-data:
