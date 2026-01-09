@@ -37,8 +37,6 @@ services:
     depends_on:
       - todos-backend
     restart: unless-stopped
-    command: ["pm2-runtime", "serve", "build/", "3001", "--name", "todos-frontend", "--spa"]
-
   homeapp-frontend:
     build: .
     container_name: homeapp-frontend
@@ -49,4 +47,3 @@ services:
     depends_on:
       - todos-backend
     restart: unless-stopped
-    command: ["pm2-runtime", "serve", "build/", "3002", "--name", "homeapp-frontend", "--spa"]
