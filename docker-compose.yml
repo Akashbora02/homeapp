@@ -1,35 +1,68 @@
 services:
-  homeapp:
-    build: .
-    container_name: homeapp-frontend
-    ports:
-      - "3002:80"
-    restart: always
-
   grocery-backend:
     build: ./GroceryAppBe
+    container_name: grocery-backend
+    env_file:
+      - ./GroceryAppBe/.env
     ports:
       - "5000:5000"
-    restart: always
+    depends_on:
+      - mongo
+    restart: unless-stopped
 
   grocery-frontend:
     build: ./GroceryAppFe
+    container_name: grocery-frontend
+    env_file:
+      - ./GroceryAppFe/.env
     ports:
       - "3000:3000"
     depends_on:
-      - grocery-backend
-    restart: always
-
+      - backend
+    restart: unless-stopped
   todos-backend:
     build: ./TodosBe
+    container_name: todos-backend
+    env_file:
+      - ./TodosBe/.env
     ports:
       - "5001:5000"
-    restart: always
+    depends_on:
+      - mongo
+    restart: unless-stopped
 
   todos-frontend:
     build: ./TodosFe
+    container_name: todos-frontend
+    env_file:
+      - ./TodosFe/.env
     ports:
-      - "3001:80"
+      - "3001:3000"
     depends_on:
       - todos-backend
-    restart: always
+    restart: unless-stopped
+    command: ["pm2-runtime", "serve", "build/", "3001", "--name", "todos-frontend", "--spa"]
+
+  homeapp-frontend:
+    build: .
+    container_name: homeapp-frontend
+    env_file:
+      - .env
+    ports:
+      - "3002:3000"
+    depends_on:
+      - todos-backend
+    restart: unless-stopped
+    command: ["pm2-runtime", "serve", "build/", "3002", "--name", "homeapp-frontend", "--spa"]
+
+  mongo:
+    image: mongo:6
+    container_name: grocery-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo-data:

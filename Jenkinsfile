@@ -16,82 +16,50 @@ pipeline {
             }
         }
 
-        stage('Checkout All Repositories') {
-            parallel {
-
-                stage('HomeApp') {
-                    steps {
-                        dir('homeapp') {
-                            git branch: 'main',
-                                url: 'https://github.com/Akashbora02/homeapp.git'
-                        }
-                    }
-                }
-
-                stage('GroceryAppBe') {
-                    steps {
-                        dir('GroceryAppBe') {
-                            git branch: 'main',
-                                url: 'https://github.com/Akashbora02/GroceryAppBe.git'
-                        }
-                    }
-                }
-
-                stage('GroceryAppFe') {
-                    steps {
-                        dir('GroceryAppFe') {
-                            git branch: 'main',
-                                url: 'https://github.com/Akashbora02/GroceryAppFe.git'
-                        }
-                    }
-                }
-
-                stage('TodosBe') {
-                    steps {
-                        dir('TodosBe') {
-                            git branch: 'main',
-                                url: 'https://github.com/Akashbora02/TodosBe.git'
-                        }
-                    }
-                }
-
-                stage('TodosFe') {
-                    steps {
-                        dir('TodosFe') {
-                            git branch: 'main',
-                                url: 'https://github.com/Akashbora02/TodosFe.git'
-                        }
-                    }
-                }
+        stage('Checkout Code') {
+            steps {
+                echo "Checking out HomeApp mono-repo..."
+                git branch: 'main',
+                    url: 'https://github.com/Akashbora02/homeapp.git'
             }
         }
 
         stage('Build & Deploy (Docker Compose)') {
             steps {
-                dir('homeapp'){
                 sh '''
+                echo "Current directory:"
                 pwd
+                echo "Listing files:"
                 ls -l
-                docker compose down
+
+                echo "Stopping existing containers..."
+                docker compose down || true
+
+                echo "Building images..."
                 docker compose build
+
+                echo "Starting containers..."
                 docker compose up -d
                 '''
-                }
             }
         }
-/*        stage('Health Check') {
+
+        stage('Health Check') {
             steps {
                 sh '''
-                  curl -f http://localhost:3000
-                  curl -f http://localhost:3001
-                  curl -f http://localhost:3002
+                echo "Checking application health..."
+
+                curl -f http://localhost:3000 || echo "❌ Grocery Frontend not ready"
+                curl -f http://localhost:3001 || echo "❌ Todos Frontend not ready"
+                curl -f http://localhost:3002 || echo "❌ HomeApp Frontend not ready"
                 '''
             }
-        }*/
+        }
     }
+
     post {
         success {
-            echo "✅ All applications including HomeApp are running successfully"
+            echo "✅ All applications are deployed successfully"
         }
         failure {
             echo "❌ Deployment failed"

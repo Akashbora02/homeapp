@@ -1,26 +1,24 @@
-# Use official Node.js LTS image as base
-FROM node:20-alpine
+# Use official Node.js LTS image
+FROM node:20
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json for caching
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+RUN npm install -g pm2
 
-# Copy the rest of the app
+# Copy the rest of the frontend code
 COPY . .
 
 # Build the React app
 RUN npm run build
 
-# Install a lightweight server to serve the build
-RUN npm install -g serve
-
 # Expose port 3000
 EXPOSE 3000
 
-# Start the app using serve
-CMD ["serve", "-s", "build", "-l", "3000"]
+# Serve the build folder using PM2
+CMD ["pm2-runtime", "serve", "build/", "3000", "--name", "grocery-frontend", "--spa"]
