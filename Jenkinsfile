@@ -30,15 +30,11 @@ pipeline {
                 pwd
                 echo "Listing files:"
                 ls -l
-
-                echo "Stopping existing containers..."
-                docker compose down || true
-
-                echo "Building images..."
-                docker compose build
-
-                echo "Starting containers..."
+                docker compose down -v
+                docker system prune -af
+                docker compose build --no-cache
                 docker compose up -d
+
                 '''
             }
         }
