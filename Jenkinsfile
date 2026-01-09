@@ -82,9 +82,9 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh '''
-                  curl -f http://localhost:3002
+                  curl -f http://localhost:3000
                   curl -f http://localhost:3001
-                  curl -f http://localhost:3003
+                  curl -f http://localhost:3002
                 '''
             }
         }
