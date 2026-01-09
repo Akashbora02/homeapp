@@ -68,7 +68,7 @@ pipeline {
 
         stage('Build & Deploy (Docker Compose)') {
             steps {
-                dir('homeapp')
+                dir('homeapp'){
                 sh '''
                 pwd
                 ls -l
@@ -76,6 +76,7 @@ pipeline {
                 docker compose build
                 docker compose up -d
                 '''
+                }
             }
         }
 
