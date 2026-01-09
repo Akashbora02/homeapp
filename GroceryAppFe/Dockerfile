@@ -1,35 +1,26 @@
-# 1. Build stage
-FROM node:18-alpine AS build
+# Use official Node.js LTS image as base
+FROM node:20-alpine
 
-# Install build tools for Alpine (needed for some node modules)
-RUN apk add --no-cache python3 make g++
-
+# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package.json and package-lock.json
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the frontend source code
+# Copy the rest of the app
 COPY . .
 
-# Copy your .env if needed
-# COPY .env .env  # Uncomment if .env is not already in repo
-
-# Build the React app (produces /app/build)
+# Build the React app
 RUN npm run build
 
-# 2. Production stage with Nginx
-FROM nginx:alpine
+# Install a lightweight server to serve the build
+RUN npm install -g serve
 
-# Remove default nginx static files
-RUN rm -rf /usr/share/nginx/html/*
+# Expose port 3000
+EXPOSE 3000
 
-# Copy React build artifacts from build stage
-COPY --from=build /app/src /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
-
-# Start Nginx in foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Start the app using serve
+CMD ["serve", "-s", "build", "-l", "3000"]
