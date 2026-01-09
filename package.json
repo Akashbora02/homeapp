@@ -37,3 +37,17 @@
     ]
   }
 }
+{
+  "name": "node-pm2-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "pm2-runtime server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0"
+  }
+}
