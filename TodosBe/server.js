@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import groceryRoutes from "./routes/groceryRoutes.js"; // or todoRoutes
+import todoRoutes from "./routes/todoRoutes.js";
 
 dotenv.config();
 
@@ -15,11 +15,10 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Mongo error:", err));
 
-app.use("/todos", todoRoutes); 
-// OR app.use("/todos", todoRoutes);
+app.use("/todos", todoRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Todos server running on port ${PORT}`);
 });
