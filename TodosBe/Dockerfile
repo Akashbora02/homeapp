@@ -11,6 +11,6 @@ RUN npm install -g pm2
 # Copy all code
 COPY . .
 
-EXPOSE 5000
+EXPOSE 5001
 
 CMD ["pm2-runtime", "server.js"]

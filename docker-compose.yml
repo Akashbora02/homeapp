@@ -28,7 +28,7 @@ services:
     env_file:
       - ./TodosBe/.env
     ports:
-      - "5001:5000"  # host:container
+      - "5001:5001"  # host:container
     restart: unless-stopped
 
   # Todos Frontend

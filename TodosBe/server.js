@@ -13,12 +13,11 @@ app.use(cors());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("Mongo error:", err));
+  .catch(console.error);
 
 app.use("/todos", todoRoutes);
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Todos server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Todos backend running on port ${PORT}`)
+);
