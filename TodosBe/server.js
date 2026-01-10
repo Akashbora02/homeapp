@@ -27,7 +27,7 @@ portfinder.getPort((err, port) => {
     console.error("Error finding available port:", err);
     return;
   }
-  app.listen(port, () => {
+  app.listen(port, "0.0.0.0", () => {
     console.log(`Server running on port ${port}`);
   });
 });
