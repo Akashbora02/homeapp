@@ -1,6 +1,6 @@
 services:
   homeapp-fe:
-    build: ./homeapp-fe
+    build: .
     container_name: homeapp-fe
     ports:
       - "3002:80"
