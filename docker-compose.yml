@@ -1,16 +1,4 @@
-version: "3.9"
-
 services:
-  # MongoDB for all apps
-  mongo:
-    image: mongo:6
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    restart: unless-stopped
-
   # Grocery Backend
   groceryapp-be:
     build: ./GroceryAppBe
@@ -19,8 +7,6 @@ services:
       - ./GroceryAppBe/.env
     ports:
       - "5000:5000"
-    depends_on:
-      - mongo
     restart: unless-stopped
 
   # Grocery Frontend
@@ -43,8 +29,6 @@ services:
       - ./TodosBe/.env
     ports:
       - "5001:5000"  # host:container
-    depends_on:
-      - mongo
     restart: unless-stopped
 
   # Todos Frontend
@@ -70,6 +54,3 @@ services:
     depends_on:
       - groceryapp-be
     restart: unless-stopped
-
-volumes:
-  mongo-data:
