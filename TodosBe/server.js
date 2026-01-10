@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import portfinder from "portfinder";
 import todoRoutes from "./routes/todoRoutes.js";
 
 dotenv.config();
@@ -10,27 +9,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("MongoDB connected"))
-.catch((err) => console.error(err));
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
+// Routes
 app.use("/todos", todoRoutes);
 
-const DEFAULT_PORT = process.env.PORT || 5000;
-portfinder.basePort = DEFAULT_PORT;
-
-portfinder.getPort((err, port) => {
-  if (err) {
-    console.error("Error finding available port:", err);
-    return;
-  }
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`Server running on port ${port}`);
-  });
+// Fixed port from env
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
