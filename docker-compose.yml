@@ -15,6 +15,8 @@ services:
       - ./GroceryAppBe/.env
     ports:
       - "5000:5000"
+    depends_on:
+      - mongo
     restart: unless-stopped
 
   groceryapp-fe:
@@ -37,6 +39,8 @@ services:
       - ./TodosBe/.env
     ports:
       - "5001:5000"
+    depends_on:
+      - mongo
     restart: unless-stopped
 
   todos-fe:
@@ -58,3 +62,6 @@ services:
       volumes:
         - mongo-data:/data/db
       restart: unless-stopped
+
+volumes:
+  mongo-data:
