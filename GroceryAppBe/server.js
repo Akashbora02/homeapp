@@ -12,13 +12,12 @@ app.use(cors());
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected (Grocery)"))
-  .catch((err) => console.error("Mongo error:", err));
+  .then(() => console.log("MongoDB connected"))
+  .catch(console.error);
 
 app.use("/api/groceries", groceryRoutes);
 
 const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Grocery backend running on port ${PORT}`);
-});
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Grocery backend running on ${PORT}`)
+);
