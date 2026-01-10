@@ -5,4 +5,3 @@ services:
     container_name: homeapp-frontend
     ports:
       - "3002:3002"
-    restart: always
