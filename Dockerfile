@@ -1,23 +1,24 @@
-# Use Node.js LTS
-FROM node:20-alpine
-
-# Set working directory
+# Build stage
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy dependency files first
 COPY package*.json ./
-
-# Install dependencies and PM2
-RUN npm install && npm install -g pm2
-
-# Copy application source code
+RUN npm install
 COPY . .
-
-# Build the frontend (creates build/)
 RUN npm run build
 
-# Expose frontend port
-EXPOSE 3002
+# Runtime stage
+FROM nginx:alpine
 
-# Serve build folder using PM2
-CMD ["pm2-runtime", "serve", "build", "3002", "--name", "homeapp-frontend", "--spa"]
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy build output
+COPY --from=builder /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

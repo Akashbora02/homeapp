@@ -4,4 +4,4 @@ services:
     image: homeapp-frontend
     container_name: homeapp-frontend
     ports:
-      - "3002:3002"
+      - "3002:80"
