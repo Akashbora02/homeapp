@@ -15,7 +15,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Mongo error:", err));
 
-app.use("/api/groceries", groceryRoutes); 
+app.use("/todos", todoRoutes); 
 // OR app.use("/todos", todoRoutes);
 
 const PORT = process.env.PORT || 5000;
