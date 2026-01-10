@@ -1,7 +1,43 @@
 services:
-  homeapp-frontend:
-    build: .
-    image: homeapp-frontend
-    container_name: homeapp-frontend
+  homeapp-fe:
+    build: ./homeapp-fe
+    container_name: homeapp-fe
     ports:
       - "3002:80"
+    restart: unless-stopped
+
+  GroceryAppBe:
+    build: ./GroceryAppBe
+    container_name: groceryapp-be
+    env_file:
+      - ./GroceryAppBe/.env
+    ports:
+      - "5000:5000"
+
+  GroceryAppFe:
+    build: ./GroceryAppFe
+    container_name: groceryapp-fe
+    env_file:
+      - ./GroceryAppFe/.env
+    ports:
+      - "3000:80"
+    depends_on:
+      - GroceryAppBe
+
+  TodosBe:
+    build: ./TodosBe
+    container_name: todos-be
+    env_file:
+      - ./TodosBe/.env
+    ports:
+      - "5001:5000"
+
+  TodosFe:
+    build: ./TodosFe
+    container_name: todos-fe
+    env_file:
+      - ./TodosFe/.env
+    ports:
+      - "3001:80"
+    depends_on:
+      - TodosBe

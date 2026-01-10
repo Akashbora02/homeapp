@@ -1,15 +1,17 @@
-FROM node:20
-
+# Build stage
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
-RUN npm install -g pm2
-
 COPY . .
 RUN npm run build
 
-EXPOSE 3001
+# Runtime stage
+FROM nginx:alpine
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build /usr/share/nginx/html
 
-CMD ["pm2-runtime", "serve", "--name", "todos-frontend", "--", "-s", "build", "-l", "3001"]
-
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
