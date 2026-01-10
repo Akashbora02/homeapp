@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use("/todos", todoRoutes);
 
-const DEFAULT_PORT = process.env.PORT || 5000;
+const DEFAULT_PORT = process.env.PORT || 5001;
 portfinder.basePort = DEFAULT_PORT;
 
 portfinder.getPort((err, port) => {
