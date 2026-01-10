@@ -1,15 +1,19 @@
+version: "3.9"
+
 services:
-  homeapp-fe:
-    build: .
-    image: homeapp-fe:latest
-    container_name: homeapp-fe
+  # MongoDB for all apps
+  mongo:
+    image: mongo:6
+    container_name: mongo
     ports:
-      - "3002:80"
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
     restart: unless-stopped
 
+  # Grocery Backend
   groceryapp-be:
     build: ./GroceryAppBe
-    image: groceryapp-be:latest
     container_name: groceryapp-be
     env_file:
       - ./GroceryAppBe/.env
@@ -19,9 +23,9 @@ services:
       - mongo
     restart: unless-stopped
 
+  # Grocery Frontend
   groceryapp-fe:
     build: ./GroceryAppFe
-    image: groceryapp-fe:latest
     container_name: groceryapp-fe
     env_file:
       - ./GroceryAppFe/.env
@@ -31,21 +35,21 @@ services:
       - groceryapp-be
     restart: unless-stopped
 
+  # Todos Backend
   todos-be:
     build: ./TodosBe
-    image: todos-be:latest
     container_name: todos-be
     env_file:
       - ./TodosBe/.env
     ports:
-      - "5001:5000"
+      - "5001:5000"  # host:container
     depends_on:
       - mongo
     restart: unless-stopped
 
+  # Todos Frontend
   todos-fe:
     build: ./TodosFe
-    image: todos-fe:latest
     container_name: todos-fe
     env_file:
       - ./TodosFe/.env
@@ -54,14 +58,18 @@ services:
     depends_on:
       - todos-be
     restart: unless-stopped
-  mongo:
-      image: mongo:6
-      container_name: mongo
-      ports:
-        - "27017:27017"
-      volumes:
-        - mongo-data:/data/db
-      restart: unless-stopped
+
+  # HomeApp Frontend
+  homeapp-fe:
+    build: .
+    container_name: homeapp-fe
+    env_file:
+      - .env
+    ports:
+      - "3002:80"
+    depends_on:
+      - groceryapp-be
+    restart: unless-stopped
 
 volumes:
   mongo-data:
