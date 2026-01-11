@@ -67,6 +67,8 @@ pipeline {
     stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
+        ls
+        pwd
         kubectl apply -f k8s/grocery-backend_deployment.yaml
         kubectl apply -f k8s/todos-backend_deployment.yaml
 
