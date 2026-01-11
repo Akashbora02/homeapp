@@ -117,10 +117,10 @@ pipeline {
           echo "http://${INGRESS_HOST}/"
           echo ""
           echo "🔌 Grocery API:"
-          echo "http://${INGRESS_HOST}/grocery/api/groceries"
+          echo "http://${INGRESS_HOST}/api/groceries"
           echo ""
           echo "🔌 Todos API:"
-          echo "http://${INGRESS_HOST}/todos/api"
+          echo "http://${INGRESS_HOST}/todos"
           echo "======================================="
         }
       }
