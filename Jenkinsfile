@@ -1,60 +1,138 @@
 pipeline {
-    agent {
-        label 'homeapp'
+  agent any
+
+  environment {
+    DOCKERHUB_USER = 'akashbora02'
+    KUBECONFIG_CRED = credentials('kubeconfig-id')
+    NAMESPACE = 'default'
+  }
+
+  stages {
+
+    /* ============================= */
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    stages {
+    /* ============================= */
+    stage('Build & Push Backend Images') {
+      steps {
+        sh '''
+        docker build -t $DOCKERHUB_USER/grocery-be:latest ./GroceryAppBe
+        docker push $DOCKERHUB_USER/grocery-be:latest
 
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-        stage('Checkout Code') {
-            steps {
-                echo "Checking out HomeApp mono-repo..."
-                git branch: 'main',
-                    url: 'https://github.com/Akashbora02/homeapp.git'
-            }
-        }
-
-        stage('Build & Deploy (Docker Compose)') {
-            steps {
-                sh '''
-                echo "Current directory:"
-                pwd
-                echo "Listing files:"
-                ls -l
-
-                docker compose down -v
-                docker system prune -af
-                docker builder prune -af
-                docker compose build --no-cache
-                docker compose up -d
-
-                '''
-            }
-        }
-
-        stage('Health Check') {
-            steps {
-                sh '''
-                echo "Checking application health..."
-
-                curl -f http://localhost:3000 || echo "❌ Grocery Frontend not ready"
-                curl -f http://localhost:3001 || echo "❌ Todos Frontend not ready"
-                curl -f http://localhost:3002 || echo "❌ HomeApp Frontend not ready"
-                '''
-            }
-        }
+        docker build -t $DOCKERHUB_USER/todos-be:latest ./TodosBe
+        docker push $DOCKERHUB_USER/todos-be:latest
+        '''
+      }
     }
 
-    post {
-        success {
-            echo "✅ All applications are deployed successfully"
-        }
-        failure {
-            echo "❌ Deployment failed"
-        }
+    /* ============================= */
+    stage('Deploy Backends (ClusterIP)') {
+      steps {
+        sh '''
+        kubectl apply -f k8s/grocery-be_deployment.yaml
+        kubectl apply -f k8s/todos-be_deployment.yaml
+
+        kubectl rollout status deployment/grocery-backend -n $NAMESPACE
+        kubectl rollout status deployment/todos-backend -n $NAMESPACE
+        '''
+      }
     }
+
+    /* ============================= */
+    stage('Build & Push Frontend Images') {
+      steps {
+        sh '''
+        docker build -t $DOCKERHUB_USER/grocery-fe:latest ./GroceryAppFe
+        docker push $DOCKERHUB_USER/grocery-fe:latest
+
+        docker build -t $DOCKERHUB_USER/todos-fe:latest ./TodosFe
+        docker push $DOCKERHUB_USER/todos-fe:latest
+
+        docker build -t $DOCKERHUB_USER/homeapp-fe:latest .
+        docker push $DOCKERHUB_USER/homeapp-fe:latest
+        '''
+      }
+    }
+
+    /* ============================= */
+    stage('Deploy Frontends') {
+      steps {
+        sh '''
+        kubectl apply -f k8s/homeapp_deployment.yaml
+
+        kubectl rollout status deployment/grocery-frontend -n $NAMESPACE
+        kubectl rollout status deployment/todos-frontend -n $NAMESPACE
+        kubectl rollout status deployment/homeapp-frontend -n $NAMESPACE
+        '''
+      }
+    }
+
+    /* ============================= */
+    stage('Deploy Ingress') {
+      steps {
+        sh '''
+        kubectl apply -f k8s/ingress.yaml
+        '''
+      }
+    }
+
+    /* ============================= */
+    stage('Fetch Ingress Host & Print URLs') {
+      steps {
+        script {
+
+          echo "⏳ Waiting for ALB to be provisioned..."
+          sleep 40
+
+          def INGRESS_HOST = sh(
+            script: """
+              kubectl get ingress app-ingress \
+              -n $NAMESPACE \
+              -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+            """,
+            returnStdout: true
+          ).trim()
+
+          if (!INGRESS_HOST) {
+            error "❌ Ingress hostname not found"
+          }
+
+          echo "======================================="
+          echo "✅ APPLICATION IS LIVE"
+          echo "======================================="
+          echo "🌐 ALB HOST:"
+          echo "http://${INGRESS_HOST}"
+          echo ""
+          echo "🧺 Grocery App:"
+          echo "http://${INGRESS_HOST}/grocery"
+          echo ""
+          echo "📝 Todos App:"
+          echo "http://${INGRESS_HOST}/todos"
+          echo ""
+          echo "🏠 Home App:"
+          echo "http://${INGRESS_HOST}/"
+          echo ""
+          echo "🔌 Grocery API:"
+          echo "http://${INGRESS_HOST}/grocery/api/groceries"
+          echo ""
+          echo "🔌 Todos API:"
+          echo "http://${INGRESS_HOST}/todos/api"
+          echo "======================================="
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "🎉 Deployment completed successfully"
+    }
+    failure {
+      echo "❌ Deployment failed"
+    }
+  }
 }
