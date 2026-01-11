@@ -1,22 +1,38 @@
 pipeline {
-  agent any
+  agent {
+    label 'homeapp'
+  }
 
   environment {
     DOCKERHUB_USER = 'akashbora02'
-    KUBECONFIG_CRED = credentials('kubeconfig-id')
+//    KUBECONFIG_CRED = credentials('kubeconfig-id')
     NAMESPACE = 'default'
   }
 
   stages {
 
-    /* ============================= */
     stage('Checkout') {
       steps {
         checkout scm
       }
     }
 
-    /* ============================= */
+    stage('Terraform Init') {
+      withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws-creds'
+          ]]) {
+                steps {
+                dir('Infra'){
+                  sh '''
+                    terraform init
+                    terraform apply -auto-approve
+                  '''
+                }
+            }
+        }
+    }
+
     stage('Build & Push Backend Images') {
       steps {
         sh '''
@@ -28,9 +44,8 @@ pipeline {
         '''
       }
     }
-
-    /* ============================= */
-    stage('Deploy Backends (ClusterIP)') {
+  }
+/*    stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
         kubectl apply -f k8s/grocery-be_deployment.yaml
@@ -42,7 +57,6 @@ pipeline {
       }
     }
 
-    /* ============================= */
     stage('Build & Push Frontend Images') {
       steps {
         sh '''
@@ -58,7 +72,6 @@ pipeline {
       }
     }
 
-    /* ============================= */
     stage('Deploy Frontends') {
       steps {
         sh '''
@@ -71,7 +84,6 @@ pipeline {
       }
     }
 
-    /* ============================= */
     stage('Deploy Ingress') {
       steps {
         sh '''
@@ -80,7 +92,6 @@ pipeline {
       }
     }
 
-    /* ============================= */
     stage('Fetch Ingress Host & Print URLs') {
       steps {
         script {
@@ -125,8 +136,8 @@ pipeline {
         }
       }
     }
-  }
-
+  } 
+*/
   post {
     success {
       echo "🎉 Deployment completed successfully"
