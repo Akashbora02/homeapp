@@ -4,7 +4,7 @@ pipeline {
   }
 
   environment {
-//    KUBECONFIG_CRED = credentials('kubeconfig-id')
+    KUBECONFIG_CRED = credentials('kubeconfig-id')
     NAMESPACE = 'default'
   }
 
@@ -67,8 +67,6 @@ pipeline {
     stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
-        ls
-        pwd
         kubectl apply -f k8s/grocerybe_deployment.yml
         kubectl apply -f k8s/todosbe_deployment.yml
 
