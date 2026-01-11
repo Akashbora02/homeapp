@@ -18,11 +18,11 @@ pipeline {
     }
 
     stage('Terraform Init') {
-      withCredentials([[
-          $class: 'AmazonWebServicesCredentialsBinding',
-          credentialsId: 'aws-creds'
-          ]]) {
-                steps {
+      steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+            ]]) {
                 dir('Infra'){
                   sh '''
                     terraform init
