@@ -66,6 +66,7 @@ pipeline {
 
     stage('Deploy Backends (ClusterIP)') {
       steps {
+        dir('k8s') {
         sh '''
         ls
         pwd
@@ -76,6 +77,7 @@ pipeline {
         kubectl rollout status deployment/grocerybe -n $NAMESPACE
         kubectl rollout status deployment/todosbe -n $NAMESPACE
         '''
+        }
       }
     }
 
