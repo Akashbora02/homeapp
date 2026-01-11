@@ -4,7 +4,6 @@ pipeline {
   }
 
   environment {
-    DOCKERHUB_USER = 'akashbora02'
 //    KUBECONFIG_CRED = credentials('kubeconfig-id')
     NAMESPACE = 'default'
   }
@@ -32,15 +31,29 @@ pipeline {
             }
         }
     }
+    stage('Docker Login') {
+      steps {
+        withCredentials([usernamePassword(
+          credentialsId: 'dockerhub-cred',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+          '''
+        }
+      }
+    }
+
 
     stage('Build & Push Backend Images') {
       steps {
         sh '''
-        docker build -t $DOCKERHUB_USER/grocery-be:latest ./GroceryAppBe
-        docker push $DOCKERHUB_USER/grocery-be:latest
+        docker build -t $DOCKER_USER/grocery-be:latest ./GroceryAppBe
+        docker push $DOCKER_USER/grocery-be:latest
 
-        docker build -t $DOCKERHUB_USER/todos-be:latest ./TodosBe
-        docker push $DOCKERHUB_USER/todos-be:latest
+        docker build -t $DOCKER_USER/todos-be:latest ./TodosBe
+        docker push $DOCKER_USER/todos-be:latest
         '''
       }
     }
@@ -60,14 +73,14 @@ pipeline {
     stage('Build & Push Frontend Images') {
       steps {
         sh '''
-        docker build -t $DOCKERHUB_USER/grocery-fe:latest ./GroceryAppFe
-        docker push $DOCKERHUB_USER/grocery-fe:latest
+        docker build -t $DOCKER_USER/grocery-fe:latest ./GroceryAppFe
+        docker push $DOCKER_USER/grocery-fe:latest
 
-        docker build -t $DOCKERHUB_USER/todos-fe:latest ./TodosFe
-        docker push $DOCKERHUB_USER/todos-fe:latest
+        docker build -t $DOCKER_USER/todos-fe:latest ./TodosFe
+        docker push $DOCKER_USER/todos-fe:latest
 
-        docker build -t $DOCKERHUB_USER/homeapp-fe:latest .
-        docker push $DOCKERHUB_USER/homeapp-fe:latest
+        docker build -t $DOCKER_USER/homeapp-fe:latest .
+        docker push $DOCKER_USER/homeapp-fe:latest
         '''
       }
     }
