@@ -70,6 +70,7 @@ pipeline {
         kubectl apply -f k8s/grocery-be_deployment.yaml
         kubectl apply -f k8s/todos-be_deployment.yaml
 
+
         kubectl rollout status deployment/grocery-backend -n $NAMESPACE
         kubectl rollout status deployment/todos-backend -n $NAMESPACE
         '''
