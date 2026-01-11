@@ -48,6 +48,11 @@ pipeline {
 
     stage('Build & Push Backend Images') {
       steps {
+        withCredentials([usernamePassword(
+          credentialsId: 'dockerhub-cred',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
         sh '''
         docker build -t $DOCKER_USER/grocery-be:latest ./GroceryAppBe
         docker push $DOCKER_USER/grocery-be:latest
@@ -55,6 +60,7 @@ pipeline {
         docker build -t $DOCKER_USER/todos-be:latest ./TodosBe
         docker push $DOCKER_USER/todos-be:latest
         '''
+        }
       }
     }
   }
