@@ -66,18 +66,16 @@ pipeline {
 
     stage('Deploy Backends (ClusterIP)') {
       steps {
-        dir('k8s') {
         sh '''
         ls
         pwd
-        kubectl apply -f k8s/grocerybe_deployment.yaml
-        kubectl apply -f k8s/todosbe_deployment.yaml
+        kubectl apply -f k8s/grocerybe_deployment.yml
+        kubectl apply -f k8s/todosbe_deployment.yml
 
 
         kubectl rollout status deployment/grocerybe -n $NAMESPACE
         kubectl rollout status deployment/todosbe -n $NAMESPACE
         '''
-        }
       }
     }
 
@@ -105,9 +103,9 @@ pipeline {
     stage('Deploy Frontends') {
       steps {
         sh '''
-        kubectl apply -f k8s/homeapp_deployment.yaml
-        kubectl apply -f k8s/groceryfe_deployment.yaml
-        kubectl apply -f k8s/todosfe_deployment.yaml
+        kubectl apply -f k8s/homeapp_deployment.yml
+        kubectl apply -f k8s/groceryfe_deployment.yml
+        kubectl apply -f k8s/todosfe_deployment.yml
 
         kubectl rollout status deployment/grocery-frontend -n $NAMESPACE
         kubectl rollout status deployment/todos-frontend -n $NAMESPACE
@@ -119,7 +117,7 @@ pipeline {
     stage('Deploy Ingress') {
       steps {
         sh '''
-        kubectl apply -f k8s/ingress.yaml
+        kubectl apply -f k8s/ingress.yml
         '''
       }
     }
