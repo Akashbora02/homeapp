@@ -1,4 +1,4 @@
-sudo #!/bin/bash
+#!/bin/bash
 # Update & install dependencies
 sudo apt update -y
 sudo apt install -y fontconfig openjdk-21-jre docker.io curl awscli unzip lsb-release gnupg software-properties-common wget
