@@ -63,8 +63,8 @@ pipeline {
         }
       }
     }
-  }
-/*    stage('Deploy Backends (ClusterIP)') {
+
+    stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
         kubectl apply -f k8s/grocery-be_deployment.yaml
@@ -79,6 +79,11 @@ pipeline {
 
     stage('Build & Push Frontend Images') {
       steps {
+        withCredentials([usernamePassword(
+          credentialsId: 'dockerhub-cred',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
         sh '''
         docker build -t $DOCKER_USER/grocery-fe:latest ./GroceryAppFe
         docker push $DOCKER_USER/grocery-fe:latest
@@ -89,6 +94,7 @@ pipeline {
         docker build -t $DOCKER_USER/homeapp-fe:latest .
         docker push $DOCKER_USER/homeapp-fe:latest
         '''
+        }
       }
     }
 
@@ -157,7 +163,6 @@ pipeline {
       }
     }
   } 
-*/
   post {
     success {
       echo "🎉 Deployment completed successfully"
