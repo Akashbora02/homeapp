@@ -19,7 +19,7 @@ spec:
         - containerPort: 5000
         env:
           - name: MONGO_URI
-            value: mongodb://mongo:27017/grocerydb
+            value: mongodb://54.163.29.81:27017/grocerydb
           - name: PORT
             value: "5000"
 
@@ -34,5 +34,5 @@ spec:
   selector:
     app: grocery-backend
   ports:
-  - port: 5000
+  - port: 80
     targetPort: 5000

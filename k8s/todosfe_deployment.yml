@@ -32,5 +32,5 @@ spec:
   selector:
     app: todos-frontend
   ports:
-  - port: 3001
-    targetPort: 80
+  - port: 80
+    targetPort: 3001

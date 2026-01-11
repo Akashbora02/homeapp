@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: homeapp-frontend
+                port:
+                  number: 80
+
+          - path: /grocery
+            pathType: Prefix
+            backend:
+              service:
+                name: grocery-frontend
+                port:
+                  number: 80
+
+          - path: /todos
+            pathType: Prefix
+            backend:
+              service:
+                name: todos-frontend
+                port:
+                  number: 80

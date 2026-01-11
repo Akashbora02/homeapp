@@ -54,11 +54,11 @@ pipeline {
           passwordVariable: 'DOCKER_PASS'
         )]) {
         sh '''
-        docker build -t $DOCKER_USER/grocery-be:latest ./GroceryAppBe
-        docker push $DOCKER_USER/grocery-be:latest
+        docker build -t $DOCKER_USER/grocery-backend:latest ./GroceryAppBe
+        docker push $DOCKER_USER/grocery-backend:latest
 
-        docker build -t $DOCKER_USER/todos-be:latest ./TodosBe
-        docker push $DOCKER_USER/todos-be:latest
+        docker build -t $DOCKER_USER/todos-backend:latest ./TodosBe
+        docker push $DOCKER_USER/todos-backend:latest
         '''
         }
       }
@@ -67,8 +67,8 @@ pipeline {
     stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
-        kubectl apply -f k8s/grocery-be_deployment.yaml
-        kubectl apply -f k8s/todos-be_deployment.yaml
+        kubectl apply -f k8s/grocery-backend_deployment.yaml
+        kubectl apply -f k8s/todos-backend_deployment.yaml
 
 
         kubectl rollout status deployment/grocery-backend -n $NAMESPACE
@@ -85,14 +85,13 @@ pipeline {
           passwordVariable: 'DOCKER_PASS'
         )]) {
         sh '''
-        docker build -t $DOCKER_USER/grocery-fe:latest ./GroceryAppFe
-        docker push $DOCKER_USER/grocery-fe:latest
+        docker build -t $DOCKER_USER/grocery-frontend:latest ./GroceryAppFe
+        docker push $DOCKER_USER/grocery-frontend:latest
 
-        docker build -t $DOCKER_USER/todos-fe:latest ./TodosFe
-        docker push $DOCKER_USER/todos-fe:latest
-
-        docker build -t $DOCKER_USER/homeapp-fe:latest .
-        docker push $DOCKER_USER/homeapp-fe:latest
+        docker build -t $DOCKER_USER/todos-frontend:latest ./TodosFe
+        docker push $DOCKER_USER/todos-frontend:latest
+        docker build -t $DOCKER_USER/homeapp-frontend:latest .
+        docker push $DOCKER_USER/homeapp-frontend:latest
         '''
         }
       }
