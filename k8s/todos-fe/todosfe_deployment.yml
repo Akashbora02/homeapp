@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todos-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todos-frontend
+  template:
+    metadata:
+      labels:
+        app: todos-frontend
+    spec:
+      containers:
+      - name: todos-frontend
+        image: akashbora02/todos-frontend:latest
+        ports:
+        - containerPort: 80
+        env:
+          - name: REACT_APP_API_BASE_URL
+            value: http://todos-backend-svc:5001
+
+...
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: todos-frontend-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: todos-frontend
+  ports:
+  - port: 3001
+    targetPort: 80

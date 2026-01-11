@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grocery-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: grocery-backend
+  template:
+    metadata:
+      labels:
+        app: grocery-backend
+    spec:
+      containers:
+      - name: grocery-backend
+        image: akashbora02/grocery-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+          - name: MONGO_URI
+            value: mongodb://mongo:27017/grocerydb
+          - name: PORT
+            value: "5000"
+
+...
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: grocery-backend-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: grocery-backend
+  ports:
+  - port: 5000
+    targetPort: 5000
