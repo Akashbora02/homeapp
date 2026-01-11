@@ -54,11 +54,11 @@ pipeline {
           passwordVariable: 'DOCKER_PASS'
         )]) {
         sh '''
-        docker build -t $DOCKER_USER/grocery-backend:latest ./GroceryAppBe
-        docker push $DOCKER_USER/grocery-backend:latest
+        docker build -t $DOCKER_USER/grocerybe:latest ./GroceryAppBe
+        docker push $DOCKER_USER/grocerybe:latest
 
-        docker build -t $DOCKER_USER/todos-backend:latest ./TodosBe
-        docker push $DOCKER_USER/todos-backend:latest
+        docker build -t $DOCKER_USER/todosbe:latest ./TodosBe
+        docker push $DOCKER_USER/todosbe:latest
         '''
         }
       }
@@ -69,12 +69,12 @@ pipeline {
         sh '''
         ls
         pwd
-        kubectl apply -f k8s/grocery-backend_deployment.yaml
-        kubectl apply -f k8s/todos-backend_deployment.yaml
+        kubectl apply -f k8s/grocerybe_deployment.yaml
+        kubectl apply -f k8s/todosbe_deployment.yaml
 
 
-        kubectl rollout status deployment/grocery-backend -n $NAMESPACE
-        kubectl rollout status deployment/todos-backend -n $NAMESPACE
+        kubectl rollout status deployment/grocerybe -n $NAMESPACE
+        kubectl rollout status deployment/todosbe -n $NAMESPACE
         '''
       }
     }
@@ -92,6 +92,7 @@ pipeline {
 
         docker build -t $DOCKER_USER/todos-frontend:latest ./TodosFe
         docker push $DOCKER_USER/todos-frontend:latest
+
         docker build -t $DOCKER_USER/homeapp-frontend:latest .
         docker push $DOCKER_USER/homeapp-frontend:latest
         '''
@@ -103,6 +104,8 @@ pipeline {
       steps {
         sh '''
         kubectl apply -f k8s/homeapp_deployment.yaml
+        kubectl apply -f k8s/groceryfe_deployment.yaml
+        kubectl apply -f k8s/todosfe_deployment.yaml
 
         kubectl rollout status deployment/grocery-frontend -n $NAMESPACE
         kubectl rollout status deployment/todos-frontend -n $NAMESPACE
