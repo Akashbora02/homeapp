@@ -128,7 +128,7 @@ pipeline {
 
                 for (int i = 1; i <= 30; i++) {
                     INGRESS_HOST = sh(
-                        script: "kubectl get ingress app-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
+                        script: "kubectl get ingress app-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' || echo ''",
                         returnStdout: true
                     ).trim()
 
