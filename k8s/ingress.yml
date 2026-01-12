@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
 spec:
@@ -19,19 +18,18 @@ spec:
                 port:
                   number: 80
 
+          - path: /todos
+            pathType: Prefix
+            backend:
+              service:
+                name: todos-frontend-svc
+                port:
+                  number: 80
 
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: homeapp-frontend-svc
-                port:
-                  number: 80
-
-          - path: /todos
-            pathType: Prefix
-            backend:
-              service:
-                name: todos-frontend-svc
                 port:
                   number: 80
