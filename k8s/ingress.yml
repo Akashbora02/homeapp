@@ -16,7 +16,7 @@ spec:
               service:
                 name: grocery-frontend-svc
                 port:
-                  number: 80
+                  number: 3000
 
           - path: /todos
             pathType: Prefix
@@ -24,7 +24,7 @@ spec:
               service:
                 name: todos-frontend-svc
                 port:
-                  number: 80
+                  number: 3001
 
           - path: /
             pathType: Prefix
@@ -32,4 +32,4 @@ spec:
               service:
                 name: homeapp-frontend-svc
                 port:
-                  number: 80
+                  number: 3002
