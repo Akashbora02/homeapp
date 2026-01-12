@@ -19,7 +19,7 @@ pipeline {
       steps {
         withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
-            credentialsId: 'aws-creds'
+            credentialsId: 'aws_creds'
             ]]) {
                 dir('Infra'){
                   sh '''
