@@ -8,21 +8,23 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-    - http:
+    - host: akashbora.homeapp.com   # <- must point to a domain you control
+      http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: homeapp-frontend
-                port:
-                  number: 80
-
           - path: /grocery
             pathType: Prefix
             backend:
               service:
                 name: grocery-frontend
+                port:
+                  number: 80
+
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: homeapp-frontend
                 port:
                   number: 80
 
