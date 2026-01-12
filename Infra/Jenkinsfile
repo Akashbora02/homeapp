@@ -1,17 +1,16 @@
-/*pipeline {
+pipeline {
     agent any
 
     environment {
         AWS_DEFAULT_REGION = 'us-east-1'
         CLUSTER_NAME = 'EKS'
     }
-stages {
-
+    stages {
         stage('Check if EKS exists') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'aws_creds'
                 ]]) {
                     sh 'aws eks list-clusters --region $AWS_DEFAULT_REGION'
 
@@ -38,26 +37,17 @@ stages {
                 input message: 'Do you really want to DESTROY the EKS cluster?'
             }
         }
-        stage('Terraform Init') {
-            steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
-                    dir('CreateEKSWithJenkins') { // Use same folder as Create pipeline
-                        sh 'terraform init'
-                    }
-                }
-            }
-        }
         stage('Terraform Destroy') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
+                    credentialsId: 'aws_creds'
                 ]]) {
-                    dir('CreateEKSWithJenkins') {
-                        sh 'terraform destroy -auto-approve'
+                    dir('Infra') { // Use same folder as Create pipeline
+                        sh '''
+                        terraform init
+                        terraform destroy -auto-approve
+                        '''
                     }
                 }
             }
@@ -68,4 +58,4 @@ stages {
             echo 'Destroy pipeline finished.'
         }
     }
-}*/
+}
