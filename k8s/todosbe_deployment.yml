@@ -19,7 +19,7 @@ spec:
         - containerPort: 5001
         env:
           - name: MONGO_URI
-            value: mongodb://3.87.0.13:27017/todosdb
+            value: mongodb://todos-backend-svc:27017/todosdb
           - name: PORT
             value: "5001"
 
