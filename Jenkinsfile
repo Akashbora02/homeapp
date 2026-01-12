@@ -26,6 +26,7 @@ pipeline {
                   sh '''
                     terraform init
                     terraform apply -auto-approve
+
                   '''
                 }
             }
@@ -166,6 +167,20 @@ pipeline {
                 echo "http://${INGRESS_HOST}/todosdb"
                 echo "======================================="
             }
+        }
+    }
+    stage('Cleanup') {
+      steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws_creds'
+            ]]) {
+                dir('Infra'){
+        sh '''
+        terraform destroy -auto-approve
+        '''
+                }
+            } 
         }
     }
 }
