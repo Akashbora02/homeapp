@@ -127,13 +127,13 @@ pipeline {
                 def ingressHost = ''
 
                 for (int i = 1; i <= 30; i++) {
-                    ingressHost = sh(
+                    INGRESS_HOST = sh(
                         script: "kubectl get ingress app-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
                         returnStdout: true
                     ).trim()
 
-                    if (ingressHost) {
-                        echo "✅ Ingress is ready: ${ingressHost}"
+                    if (INGRESS_HOST) {
+                        echo "✅ Ingress is ready: ${INGRESS_HOST}"
                         break
                     }
 
@@ -141,33 +141,29 @@ pipeline {
                     sleep 10
                 }
 
-                if (!ingressHost) {
+                if (!INGRESS_HOST) {
                     error "❌ Ingress hostname not available after waiting"
                 }
-
-                env.INGRESS_HOST = ingressHost
-                echo "Ingress hostname: ${env.INGRESS_HOST}"
-
                 echo "======================================="
                 echo "✅ APPLICATION IS LIVE"
                 echo "======================================="
                 echo "🌐 ALB HOST:"
-                echo "http://${env.INGRESS_HOST}"
+                echo "http://${INGRESS_HOST}"
                 echo ""
                 echo "🧺 Grocery App:"
-                echo "http://${env.INGRESS_HOST}/grocery"
+                echo "http://${INGRESS_HOST}/grocery"
                 echo ""
                 echo "📝 Todos App:"
-                echo "http://${env.INGRESS_HOST}/todos"
+                echo "http://${INGRESS_HOST}/todos"
                 echo ""
                 echo "🏠 Home App:"
-                echo "http://${env.INGRESS_HOST}/"
+                echo "http://${INGRESS_HOST}/"
                 echo ""
                 echo "🔌 Grocery API:"
-                echo "http://${env.INGRESS_HOST}/api/groceries"
+                echo "http://${INGRESS_HOST}/api/groceries"
                 echo ""
                 echo "🔌 Todos API:"
-                echo "http://${env.INGRESS_HOST}/todos"
+                echo "http://${INGRESS_HOST}/todos"
                 echo "======================================="
             }
         }
