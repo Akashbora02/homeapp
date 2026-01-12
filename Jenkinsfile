@@ -124,10 +124,8 @@ pipeline {
         script {
                 echo "⏳ Waiting for ALB to be provisioned..."
 
-                // Initialize variable
                 def ingressHost = ''
 
-                // Retry loop: 30 attempts, 10s each (~5 minutes max)
                 for (int i = 1; i <= 30; i++) {
                     ingressHost = sh(
                         script: "kubectl get ingress app-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
@@ -147,22 +145,11 @@ pipeline {
                     error "❌ Ingress hostname not available after waiting"
                 }
 
-                // Set environment variable for later stages
                 env.INGRESS_HOST = ingressHost
                 echo "Ingress hostname: ${env.INGRESS_HOST}"
             }
 
-
-/*          def INGRESS_HOST = sh(
-            script: """
-              kubectl get ingress app-ingress \
-              -n $NAMESPACE \
-              -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-            """,
-            returnStdout: true
-          ).trim()*/
-
-              if (!env.INGRESS_HOST) {
+            if (!env.INGRESS_HOST) {
                   error "❌ Ingress hostname not found"
               }
 
