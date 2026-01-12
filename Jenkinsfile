@@ -122,49 +122,74 @@ pipeline {
     stage('Fetch Ingress Host & Print URLs') {
       steps {
         script {
+                echo "⏳ Waiting for ALB to be provisioned..."
 
-          echo "⏳ Waiting for ALB to be provisioned..."
-          sleep 40
+                // Initialize variable
+                def ingressHost = ''
 
-          def INGRESS_HOST = sh(
+                // Retry loop: 30 attempts, 10s each (~5 minutes max)
+                for (int i = 1; i <= 30; i++) {
+                    ingressHost = sh(
+                        script: "kubectl get ingress app-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
+                        returnStdout: true
+                    ).trim()
+
+                    if (ingressHost) {
+                        echo "✅ Ingress is ready: ${ingressHost}"
+                        break
+                    }
+
+                    echo "ALB not ready yet... retrying in 10s (attempt ${i})"
+                    sleep 10
+                }
+
+                if (!ingressHost) {
+                    error "❌ Ingress hostname not available after waiting"
+                }
+
+                // Set environment variable for later stages
+                env.INGRESS_HOST = ingressHost
+                echo "Ingress hostname: ${env.INGRESS_HOST}"
+            }
+
+
+/*          def INGRESS_HOST = sh(
             script: """
               kubectl get ingress app-ingress \
               -n $NAMESPACE \
               -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
             """,
             returnStdout: true
-          ).trim()
+          ).trim()*/
 
-          if (!INGRESS_HOST) {
-            error "❌ Ingress hostname not found"
-          }
+              if (!env.INGRESS_HOST) {
+                  error "❌ Ingress hostname not found"
+              }
 
-          echo "======================================="
-          echo "✅ APPLICATION IS LIVE"
-          echo "======================================="
-          echo "🌐 ALB HOST:"
-          echo "http://${INGRESS_HOST}"
-          echo ""
-          echo "🧺 Grocery App:"
-          echo "http://${INGRESS_HOST}/grocery"
-          echo ""
-          echo "📝 Todos App:"
-          echo "http://${INGRESS_HOST}/todos"
-          echo ""
-          echo "🏠 Home App:"
-          echo "http://${INGRESS_HOST}/"
-          echo ""
-          echo "🔌 Grocery API:"
-          echo "http://${INGRESS_HOST}/api/groceries"
-          echo ""
-          echo "🔌 Todos API:"
-          echo "http://${INGRESS_HOST}/todos"
-          echo "======================================="
+              echo "======================================="
+              echo "✅ APPLICATION IS LIVE"
+              echo "======================================="
+              echo "🌐 ALB HOST:"
+              echo "http://${env.INGRESS_HOST}"
+              echo ""
+              echo "🧺 Grocery App:"
+              echo "http://${env.INGRESS_HOST}/grocery"
+              echo ""
+              echo "📝 Todos App:"
+              echo "http://${env.INGRESS_HOST}/todos"
+              echo ""
+              echo "🏠 Home App:"
+              echo "http://${env.INGRESS_HOST}/"
+              echo ""
+              echo "🔌 Grocery API:"
+              echo "http://${env.INGRESS_HOST}/api/groceries"
+              echo ""
+              echo "🔌 Todos API:"
+              echo "http://${env.INGRESS_HOST}/todos"
+              echo "======================================="
+            }
         }
       }
-    }
-  } 
-
   post {
     success {
       echo "🎉 Deployment completed successfully"
