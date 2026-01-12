@@ -4,7 +4,6 @@ pipeline {
   }
 
   environment {
-    KUBECONFIG_CRED = credentials('kubeconfig-id')
     NAMESPACE = 'default'
   }
 
