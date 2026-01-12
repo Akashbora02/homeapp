@@ -5,6 +5,7 @@ pipeline {
 
   environment {
     NAMESPACE = 'default'
+    CLUSTER_NAME = 'EKS'
   }
 
   stages {
@@ -66,6 +67,7 @@ pipeline {
     stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
+
         kubectl apply -f k8s/grocerybe_deployment.yml
         kubectl apply -f k8s/todosbe_deployment.yml
 
@@ -164,7 +166,7 @@ pipeline {
       }
     }
   } 
-  
+
   post {
     success {
       echo "🎉 Deployment completed successfully"
