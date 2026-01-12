@@ -34,5 +34,5 @@ spec:
   selector:
     app: grocery-backend
   ports:
-  - port: 80
+  - port: 5000
     targetPort: 5000
