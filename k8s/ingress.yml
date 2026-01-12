@@ -8,8 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-    - host: akashbora.homeapp.com   # <- must point to a domain you control
-      http:
+    - http:
         paths:
           - path: /grocery
             pathType: Prefix
