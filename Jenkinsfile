@@ -45,7 +45,6 @@ pipeline {
       }
     }
 
-
     stage('Build & Push Backend Images') {
       steps {
         withCredentials([usernamePassword(
