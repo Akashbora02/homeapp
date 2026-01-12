@@ -163,7 +163,7 @@ pipeline {
                 echo "http://${INGRESS_HOST}/api/groceries"
                 echo ""
                 echo "🔌 Todos API:"
-                echo "http://${INGRESS_HOST}/todos"
+                echo "http://${INGRESS_HOST}/todosdb"
                 echo "======================================="
             }
         }
