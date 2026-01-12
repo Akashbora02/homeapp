@@ -33,3 +33,18 @@ spec:
                 name: homeapp-frontend-svc
                 port:
                   number: 3002
+          - path: /api/groceries
+            pathType: Prefix
+            backend:
+              service:
+                name: grocery-backend-svc
+                port:
+                  number: 5000
+
+          - path: /todos
+            pathType: Prefix
+            backend:
+              service:
+                name: todos-backend-svc
+                port:
+                  number: 5001
