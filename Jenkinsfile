@@ -120,8 +120,8 @@ pipeline {
     }
 
     stage('Fetch Ingress Host & Print URLs') {
-      steps {
-        script {
+        steps {
+            script {
                 echo "⏳ Waiting for ALB to be provisioned..."
 
                 def ingressHost = ''
@@ -147,36 +147,32 @@ pipeline {
 
                 env.INGRESS_HOST = ingressHost
                 echo "Ingress hostname: ${env.INGRESS_HOST}"
-            }
 
-            if (!env.INGRESS_HOST) {
-                  error "❌ Ingress hostname not found"
-              }
-
-              echo "======================================="
-              echo "✅ APPLICATION IS LIVE"
-              echo "======================================="
-              echo "🌐 ALB HOST:"
-              echo "http://${env.INGRESS_HOST}"
-              echo ""
-              echo "🧺 Grocery App:"
-              echo "http://${env.INGRESS_HOST}/grocery"
-              echo ""
-              echo "📝 Todos App:"
-              echo "http://${env.INGRESS_HOST}/todos"
-              echo ""
-              echo "🏠 Home App:"
-              echo "http://${env.INGRESS_HOST}/"
-              echo ""
-              echo "🔌 Grocery API:"
-              echo "http://${env.INGRESS_HOST}/api/groceries"
-              echo ""
-              echo "🔌 Todos API:"
-              echo "http://${env.INGRESS_HOST}/todos"
-              echo "======================================="
+                echo "======================================="
+                echo "✅ APPLICATION IS LIVE"
+                echo "======================================="
+                echo "🌐 ALB HOST:"
+                echo "http://${env.INGRESS_HOST}"
+                echo ""
+                echo "🧺 Grocery App:"
+                echo "http://${env.INGRESS_HOST}/grocery"
+                echo ""
+                echo "📝 Todos App:"
+                echo "http://${env.INGRESS_HOST}/todos"
+                echo ""
+                echo "🏠 Home App:"
+                echo "http://${env.INGRESS_HOST}/"
+                echo ""
+                echo "🔌 Grocery API:"
+                echo "http://${env.INGRESS_HOST}/api/groceries"
+                echo ""
+                echo "🔌 Todos API:"
+                echo "http://${env.INGRESS_HOST}/todos"
+                echo "======================================="
             }
         }
-      }
+    }
+}
   post {
     success {
       echo "🎉 Deployment completed successfully"
