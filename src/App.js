@@ -7,7 +7,7 @@ export default function App() {
       <h1 className="title">Microservices Frontend</h1>
       <div className="services">
         <a
-          href={process.env.REACT_APP_GROCERY_URL}
+          href={process.env.REACT_APP_GROCERY_API_URL}
           className="service-box grocery"
           target="_blank"
           rel="noopener noreferrer"
@@ -15,7 +15,7 @@ export default function App() {
           Grocery App
         </a>
         <a
-          href={process.env.REACT_APP_TODOS_URL}
+          href={process.env.REACT_APP_TODOS_API_URL}
           className="service-box todos"
           target="_blank"
           rel="noopener noreferrer"

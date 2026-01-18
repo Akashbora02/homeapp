@@ -8,19 +8,19 @@ function App() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/todos`).then((res) => setTodos(res.data));
+    axios.get(`${API_BASE_URL}/api/todos`).then((res) => setTodos(res.data));
   }, []);
 
   const addTodo = () => {
     if (!text.trim()) return;
-    axios.post(`${API_BASE_URL}/todos`, { text, completed: false }).then((res) => {
+    axios.post(`${API_BASE_URL}/api/todos`, { text, completed: false }).then((res) => {
       setTodos([...todos, res.data]);
       setText("");
     });
   };
 
   const deleteTodo = (id) => {
-    axios.delete(`${API_BASE_URL}/todos/${id}`).then(() => {
+    axios.delete(`${API_BASE_URL}/api/todos/${id}`).then(() => {
       setTodos(todos.filter((todo) => todo._id !== id));
     });
   };
@@ -125,16 +125,16 @@ function App() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/todos`).then((res) => setTodos(res.data));
+    axios.get(`${API_BASE_URL}/api/todos`).then((res) => setTodos(res.data));
   }, []);
 
   const addTodo = () => {
-    axios.post(`${API_BASE_URL}/todos`, { text, completed: false })
+    axios.post(`${API_BASE_URL}/api/todos`, { text, completed: false })
       .then((res) => setTodos([...todos, res.data]));
   };
 
   const deleteTodo = (id) => {
-    axios.delete(`${API_BASE_URL}/todos/${id}`)
+    axios.delete(`${API_BASE_URL}/api/todos/${id}`)
       .then(() => setTodos(todos.filter((todo) => todo._id !== id)));
   };
 

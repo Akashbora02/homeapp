@@ -16,12 +16,19 @@ spec:
       - name: homeapp-frontend
         image: akashbora02/homeapp-frontend:latest
         ports:
-        - containerPort: 80
+        - containerPort: 3002
         env:
           - name: REACT_APP_GROCERY_API_URL
-            value: http://grocery-backend-svc:5000
+            value: /grocery
           - name: REACT_APP_TODOS_API_URL
-            value: http://todos-backend-svc:5001
+            value: /todos
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
 
 ---
 
@@ -35,4 +42,4 @@ spec:
     app: homeapp-frontend
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 3002

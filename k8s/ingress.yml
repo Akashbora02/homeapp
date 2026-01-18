@@ -1,15 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
+  name: path-ingress
   annotations:
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
 spec:
-  ingressClassName: alb
   rules:
-    - http:
-        paths:
+  - http:
+      paths:
           - path: /grocery
             pathType: Prefix
             backend:
@@ -41,7 +42,7 @@ spec:
                 port:
                   number: 80
 
-          - path: /todos
+          - path: /api/todos
             pathType: Prefix
             backend:
               service:

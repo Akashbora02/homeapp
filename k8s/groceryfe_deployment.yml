@@ -16,10 +16,10 @@ spec:
       - name: grocery-frontend
         image: akashbora02/grocery-frontend:latest
         ports:
-        - containerPort: 80
+        - containerPort: 3000
         env:
           - name: REACT_APP_API_BASE_URL
-            value: http://grocery-backend-svc:5000
+            value: /api/groceries
 
 ---
 
@@ -33,4 +33,4 @@ spec:
     app: grocery-frontend
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 3000

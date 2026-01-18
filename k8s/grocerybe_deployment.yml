@@ -18,10 +18,18 @@ spec:
         ports:
         - containerPort: 5000
         env:
-          - name: MONGO_URI
-            value: mongodb://grocery-backend-svc:27017/grocerydb
-          - name: PORT
-            value: "5000"
+        - name: MONGO_URI
+          value: mongodb://mongo-svc:27017/grocerydb
+        - name: PORT
+          value: "5000"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+
 
 ---
 
