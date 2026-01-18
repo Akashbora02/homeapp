@@ -24,6 +24,7 @@ pipeline {
             ]]) {
                 dir('Infra'){
                   sh '''
+                    terraform destroy -auto-approve || true
                     terraform init -upgrade
                     terraform validate
                     terraform plan
