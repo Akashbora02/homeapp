@@ -50,3 +50,4 @@ spec:
             name: homeapp-frontend-svc
             port:
               number: 80
+              
