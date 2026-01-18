@@ -1,4 +1,4 @@
-terraform {
+/*terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
@@ -96,3 +96,4 @@ resource "helm_release" "alb_controller" {
     value = aws_iam_role.alb_controller.arn
   }
 }
+*/
