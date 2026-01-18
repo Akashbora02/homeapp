@@ -3,49 +3,50 @@ kind: Ingress
 metadata:
   name: path-ingress
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
 spec:
+  ingressClassName: alb
   rules:
   - http:
       paths:
-          - path: /grocery
-            pathType: Prefix
-            backend:
-              service:
-                name: grocery-frontend-svc
-                port:
-                  number: 80
+      - path: /grocery
+        pathType: Prefix
+        backend:
+          service:
+            name: grocery-frontend-svc
+            port:
+              number: 80
 
-          - path: /todos
-            pathType: Prefix
-            backend:
-              service:
-                name: todos-frontend-svc
-                port:
-                  number: 80
+      - path: /todos
+        pathType: Prefix
+        backend:
+          service:
+            name: todos-frontend-svc
+            port:
+              number: 80
 
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: homeapp-frontend-svc
-                port:
-                  number: 80
-          - path: /api/groceries
-            pathType: Prefix
-            backend:
-              service:
-                name: grocery-backend-svc
-                port:
-                  number: 80
+      - path: /api/groceries
+        pathType: Prefix
+        backend:
+          service:
+            name: grocery-backend-svc
+            port:
+              number: 80
 
-          - path: /api/todos
-            pathType: Prefix
-            backend:
-              service:
-                name: todos-backend-svc
-                port:
-                  number: 80
+      - path: /api/todos
+        pathType: Prefix
+        backend:
+          service:
+            name: todos-backend-svc
+            port:
+              number: 80
+
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: homeapp-frontend-svc
+            port:
+              number: 80
