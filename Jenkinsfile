@@ -147,7 +147,7 @@ pipeline {
                     def INGRESS_HOST = ""
                     def ingressName = "path-ingress"
 
-                    for (int i = 1; i <= 30; i++) {
+                    for (int i = 1; i <= 40; i++) {
                         INGRESS_HOST = sh(
                             script: "kubectl get ingress ${ingressName} -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' || echo ''",
                             returnStdout: true
