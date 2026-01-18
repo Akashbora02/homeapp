@@ -66,6 +66,23 @@ pipeline {
       }
     }
 
+    stage('Configure kubeconfig') {
+      steps {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws_creds'
+        ]]) {
+          sh '''
+            aws sts get-caller-identity
+            aws eks update-kubeconfig --name EKS --region us-east-1
+            kubectl config current-context
+            kubectl get nodes
+          '''
+        }
+      }
+    }
+
+
     stage('Deploy Backends (ClusterIP)') {
       steps {
         sh '''
