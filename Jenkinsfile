@@ -9,21 +9,6 @@ pipeline {
   }
 
   stages {
-        stage('Terraform Destroy') {
-            steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws_creds'
-                ]]) {
-                    dir('Infra') { // Use same folder as Create pipeline
-                        sh '''
-                        terraform init
-                        terraform destroy -auto-approve
-                        '''
-                    }
-                }
-            }
-        }
     stage('Checkout') {
       steps {
         checkout scm
